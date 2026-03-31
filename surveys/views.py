@@ -1,20 +1,26 @@
 from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .exceptions import SurveyCompleted
 from .models import Survey, SurveySession
-from .serializers import QuestionReadSerializer, SurveyStatsSerializer
+from .serializers import ErrorSerializer, QuestionReadSerializer, SurveyStatsSerializer
 
 
 class NextQuestionAPIView(APIView):
-    def _get_or_create_session(self, survey, user):
-        session, _ = SurveySession.objects.get_or_create(user=user, survey=survey)
-        return session
-
+    @extend_schema(
+        responses={
+            200: QuestionReadSerializer,
+            403: OpenApiResponse(description="Доступ запрещён", response=ErrorSerializer),
+            404: OpenApiResponse(description="Опрос не найден", response=ErrorSerializer),
+            409: OpenApiResponse(description="Конфликт данных (например, опрос завершён)", response=ErrorSerializer),
+        },
+        description="Получить следующий вопрос",
+    )
     def get(self, request, pk):
         survey = get_object_or_404(Survey, pk=pk)
         session, _ = SurveySession.objects.get_or_create(user=request.user, survey=survey)
@@ -28,11 +34,18 @@ class NextQuestionAPIView(APIView):
             session.save()
             raise SurveyCompleted()
 
-        serializer = QuestionReadSerializer(next_question)
-        return Response(serializer.data)
+        return Response(QuestionReadSerializer(next_question).data)
 
 
 class SurveyStatsAPIView(APIView):
+    @extend_schema(
+        responses={
+            200: SurveyStatsSerializer,
+            403: OpenApiResponse(description="Доступ запрещён", response=ErrorSerializer),
+            404: OpenApiResponse(description="Опрос не найден", response=ErrorSerializer),
+        },
+        description="Статистика по опросу",
+    )
     def get(self, request, pk):
         survey = get_object_or_404(Survey, pk=pk)
         if survey.author != request.user:

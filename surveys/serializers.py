@@ -29,3 +29,7 @@ class SurveyStatsSerializer(serializers.Serializer):
     total_sessions = serializers.IntegerField()
     finished_sessions = serializers.IntegerField()
     avg_completion_seconds = serializers.FloatField(allow_null=True)
+
+
+class ErrorSerializer(serializers.Serializer):
+    detail = serializers.CharField()
