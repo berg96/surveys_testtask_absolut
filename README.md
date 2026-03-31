@@ -63,9 +63,9 @@ cd surveys_testtask_absolut
 docker compose up -d
 ```
 
-Документация API при запущенных контейнерах доступна по следующим адресам:
-[Swagger](http://localhost/api/docs/swagger)
-[Redoc](http://localhost/api/docs/redoc)
+Документация API при запущенных контейнерах доступна по следующим адресам:  
+[Swagger](http://localhost/api/docs/swagger)  
+[Redoc](http://localhost/api/docs/redoc)  
 
 ---
 
