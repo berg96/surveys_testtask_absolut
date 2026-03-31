@@ -1,0 +1,46 @@
+# Python cache and bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and local settings
+.env
+*.env
+.env.*
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Git repository files
+.git/
+.gitignore
+
+# Docker-related files
+docker-compose.override.yml
+docker-compose.*.yml
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.pid
+
+# Static files сборки фронтенда (если есть)
+dist/
+build/
+node_modules/
+
+# Файлы базы данных SQLite (если используются для разработки)
+*.db
+*.sqlite3
+
+# Файлы системы
+.DS_Store
+Thumbs.db
